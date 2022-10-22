@@ -14,7 +14,7 @@ def _is_satisfied(clause: np.array, tt: np.array):
 
 class Inst(object):
     def __init__(self, var_num: int, clause_num: int):
-        self.clauses = np.empty((clause_num, 3))
+        self.clauses = np.empty((clause_num, 3), dtype=int)
         self.table_t = defaultdict()
         self.var_num = var_num
 

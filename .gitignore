@@ -39,3 +39,8 @@ pip-wheel-metadata
 /poetry.toml
 
 poetry/core/*
+
+gsat
+
+uf20-91R/
+uf50-200/
