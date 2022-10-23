@@ -1,3 +1,4 @@
+import sys
 from typer import Typer, Option
 import typer
 from prob_sat import Inst
@@ -10,12 +11,18 @@ app = Typer()
 def main(
     file: str,
     max_tries: int = Option(300, "-T"),
-    max_flips: int = Option(5, "-i"),
+    max_flips: int = Option(1, "-i"),
 ):
     inst = Inst.from_dimacs(file)
     solver = ProbSat(max_tries, max_flips)
     sol = solver.solve(inst)
-    print(solver.metadata["tries"], max_tries * max_flips)
+    print(
+        solver.metadata["tries"],
+        max_tries * max_flips,
+        solver.metadata["sat_clause_c"],
+        len(inst.clauses),
+        file=sys.stderr,
+    )
     print_sol_as_cnfsol(sol)
 
 

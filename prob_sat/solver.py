@@ -10,6 +10,7 @@ class ProbSat(object):
     _cb = 2.3
 
     metadata = {
+        "sat_clause_c": 0,
         "tries": 0,
     }
 
@@ -21,18 +22,21 @@ class ProbSat(object):
 
     def solve(self, inst: Inst) -> np.array:
         tries_c = 0
+        rnd_tt = None
         for _ in range(1, self._max_tries + 1):
             rnd_tt = np.round(np.random.uniform(0, 1, size=inst.var_num + 1))
             for i in range(1, self._max_flips + 1):
                 tries_c += 1
                 sat, unsat = inst.sat_unsat(rnd_tt)
+                self.metadata["sat_clause_c"] = sat
                 if unsat == 0:
                     self.metadata["tries"] = tries_c
                     return rnd_tt[1:]
                 unsat_clause = inst.pick_rnd_unsat(unsat, rnd_tt)
                 var = self._pick_variable(unsat_clause, unsat, sat, rnd_tt, inst)
                 rnd_tt[np.abs(var)] = not rnd_tt[np.abs(var)]
-        self.metadata["tries"] = self._max_tries
+        self.metadata["tries"] = tries_c
+        return rnd_tt[1:]
 
     def _pick_variable(
         self, unsat_clause: np.array, unsat: int, sat: int, tt: np.array, inst: Inst
